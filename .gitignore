@@ -1,0 +1,7 @@
+# IntelliJ IDEA
+.idea/
+
+# Builds
+out/
+target/
+Elixir API.jar
