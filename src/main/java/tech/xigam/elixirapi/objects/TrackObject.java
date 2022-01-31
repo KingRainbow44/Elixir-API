@@ -6,4 +6,5 @@ public final class TrackObject {
     public String identifier;
     public boolean isStream;
     public String uri;
+    public long position;
 }

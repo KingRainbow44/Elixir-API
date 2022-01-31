@@ -11,11 +11,16 @@ public class Response implements StandardResponse {
     private final int responseCode;
     
     public Response(InputStream inputStream, int responseCode) {
+        this.responseCode = responseCode;
+        
+        if(inputStream == null) {
+            this.response = "";
+            return;
+        }
+        
         var reader = new BufferedReader(
                 new InputStreamReader(inputStream)
         ); this.read(reader);
-        
-        this.responseCode = responseCode;
     }
     
     public Response(String response, int responseCode) {

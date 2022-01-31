@@ -74,6 +74,6 @@ public final class QueueRequest {
     }
     
     public enum Action {
-        QUEUE
+        QUEUE, SHUFFLE
     }
 }

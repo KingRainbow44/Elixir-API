@@ -11,7 +11,7 @@ public final class Environment {
     public static void main(String[] args) {
         ElixirAPI.ENDPOINT_URL = "http://localhost:1000/";
         
-        playPlaylistExample();
+        playingExample();
     }
     
     public static void rawRequestExample() {

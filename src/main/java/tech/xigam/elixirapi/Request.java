@@ -1,5 +1,7 @@
 package tech.xigam.elixirapi;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -22,14 +24,9 @@ public final class Request {
     
     private URL buildUrl() {
         try {
-            boolean firstArgument = true;
-            StringBuilder builder = new StringBuilder(this.url);
+            StringBuilder builder = new StringBuilder(this.url + "?apiKey=" + this.api.getApiKey());
             for(var entry : this.arguments.entrySet()) {
-                if(firstArgument) {
-                    builder.append("?");
-                    firstArgument = false;
-                } else builder.append("&");
-                builder.append(entry.getKey()).append("=").append(entry.getValue());
+                builder.append("&").append(entry.getKey()).append("=").append(entry.getValue());
             } return new URL(builder.toString());
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -53,9 +50,9 @@ public final class Request {
             // Get response & execute callback.
             var response = new Response(connection.getInputStream(), connection.getResponseCode());
             callback.accept(response); connection.disconnect();
-        } catch (Exception exception) {
+        } catch (IOException exception) {
             exception.printStackTrace();
-            callback.accept(null);
+            callback.accept(new Response((InputStream) null, 404));
         }
     }
     
