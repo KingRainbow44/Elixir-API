@@ -1,5 +1,6 @@
 package tech.xigam.elixirapi;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -24,9 +25,14 @@ public final class Request {
     
     private URL buildUrl() {
         try {
-            StringBuilder builder = new StringBuilder(this.url + "?apiKey=" + this.api.getApiKey());
+            boolean firstArgument = true;
+            StringBuilder builder = new StringBuilder(this.url);
             for(var entry : this.arguments.entrySet()) {
-                builder.append("&").append(entry.getKey()).append("=").append(entry.getValue());
+                if(firstArgument) {
+                    builder.append("?");
+                    firstArgument = false;
+                } else builder.append("&");
+                builder.append(entry.getKey()).append("=").append(entry.getValue());
             } return new URL(builder.toString());
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -45,14 +51,13 @@ public final class Request {
             connection.setDoOutput(true);
 
             // Set headers.
-            connection.setRequestProperty("Authorization", "Bearer " + this.api.getApiKey());
+            connection.setRequestProperty("Authorization", this.api.getApiKey());
 
             // Get response & execute callback.
             var response = new Response(connection.getInputStream(), connection.getResponseCode());
             callback.accept(response); connection.disconnect();
         } catch (IOException exception) {
-            exception.printStackTrace();
-            callback.accept(new Response((InputStream) null, 404));
+            callback.accept(new Response(InputStream.nullInputStream(), 404));
         }
     }
     

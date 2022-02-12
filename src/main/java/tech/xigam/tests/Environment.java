@@ -1,75 +1,103 @@
 package tech.xigam.tests;
 
 import tech.xigam.elixirapi.ElixirAPI;
-import tech.xigam.elixirapi.Request;
-import tech.xigam.elixirapi.requests.PlayerRequest;
-import tech.xigam.elixirapi.requests.PlaylistRequest;
-import tech.xigam.elixirapi.requests.QueueRequest;
+import tech.xigam.elixirapi.exceptions.RequestBuildException;
+import tech.xigam.elixirapi.requests.player.GetPlayingTrackRequest;
+import tech.xigam.elixirapi.requests.player.PauseRequest;
+import tech.xigam.elixirapi.requests.player.ResumeRequest;
+import tech.xigam.elixirapi.requests.player.SkipRequest;
+import tech.xigam.elixirapi.requests.queue.GetQueueRequest;
+import tech.xigam.elixirapi.requests.queue.ShuffleRequest;
 
 public final class Environment {
+    private static ElixirAPI elixir;
     
     public static void main(String[] args) {
-        ElixirAPI.ENDPOINT_URL = "http://localhost:1000/";
+        if(args.length != 1)
+            System.exit(0);
+        Environment.elixir = ElixirAPI.create(args[0]);
         
-        playingExample();
+        shuffleExample();
     }
     
-    public static void rawRequestExample() {
-        var elixir = ElixirAPI.create("(API KEY)");
-        var request = new Request.Builder(elixir)
-                .endpoint("player")
-                .method(Request.Method.GET)
-                .argument("action", "resume")
-                .argument("guildId", "887516061266755585")
-                .build();
-        request.execute(response -> {
-            System.out.println(response.getResponse());
-        });
-    }
-    
-    public static void pauseExample() {
-        var elixir = ElixirAPI.create("(API KEY)");
-        var playerRequest = new PlayerRequest.Builder(elixir)
-                .action(PlayerRequest.Action.PAUSE)
-                .guild("887516061266755585")
-                .build();
-        playerRequest.execute(response -> System.out.println("Now paused."));
-    }
-    
-    public static void playingExample() {
-        var elixir = ElixirAPI.create("(API KEY)");
-        var playerRequest = new PlayerRequest.Builder(elixir)
-                .action(PlayerRequest.Action.NOWPLAYING)
-                .guild("887516061266755585")
-                .build();
-        playerRequest.execute(response -> {
-            var object = response.getAsTrack();
-            System.out.println("Playing: " + object.title);
-        });
+    public static void playingTrackExample() {
+        try {
+            var request = new GetPlayingTrackRequest.Builder(elixir)
+                    .guild("887516061266755585").build();
+            request.execute(response -> {
+                var trackResponse = (GetPlayingTrackRequest.Response) response;
+                var trackObject = trackResponse.getAsTrack();
+                System.out.println("Playing: " + trackObject.title);
+            });
+        } catch (RequestBuildException ignored) {
+            System.out.println("Request build failed.");
+        }
     }
     
     public static void queueExample() {
-        var elixir = ElixirAPI.create("(API KEY)");
-        var queueRequest = new QueueRequest.Builder(elixir)
-                .action(QueueRequest.Action.QUEUE)
-                .guild("887516061266755585")
-                .build();
-        queueRequest.execute(response -> {
-            var queue = response.getAsCollection();
-            for(var track : queue.tracks) {
-                System.out.println("In queue: " + track.title);
-            }
-        });
+        try {
+            var request = new GetQueueRequest.Builder(elixir)
+                    .guild("887516061266755585").build();
+            request.execute(response -> response.getAsTrackCollection()
+                    .tracks.forEach(track -> System.out.println("Queued: " + track.title)));
+        } catch (RequestBuildException ignored) {
+            System.out.println("Request build failed.");
+        }
     }
     
-    public static void playPlaylistExample() {
-        var elixir = ElixirAPI.create("(API KEY)");
-        var playlistRequest = new PlaylistRequest.Builder(elixir)
-                .action(PlaylistRequest.Action.QUEUE)
-                .playlist("magix")
-                .guild("887516061266755585")
-                .channel("887526479360065601")
-                .build();
-        playlistRequest.execute(response -> System.out.println("Playlist queued."));
+    public static void pauseExample() {
+        try {
+            var request = new PauseRequest.Builder(elixir)
+                    .guild("887516061266755585").build();
+            request.execute(response -> {
+                if(response.getResponseCode() != 200)
+                    System.out.println("Pause failed.");
+                else System.out.println("Paused.");
+            });
+        } catch (RequestBuildException ignored) {
+            System.out.println("Request build failed.");
+        }
+    }
+    
+    public static void resumeExample() {
+        try {
+            var request = new ResumeRequest.Builder(elixir)
+                    .guild("887516061266755585").build();
+            request.execute(response -> {
+                if(response.getResponseCode() != 200)
+                    System.out.println("Resume failed.");
+                else System.out.println("Resumed.");
+            });
+        } catch (RequestBuildException ignored) {
+            System.out.println("Request build failed.");
+        }
+    }
+    
+    public static void shuffleExample() {
+        try {
+            var request = new ShuffleRequest.Builder(elixir)
+                    .guild("887516061266755585").build();
+            request.execute(response -> {
+                if(response.getResponseCode() != 200)
+                    System.out.println("Shuffle failed with code: " + response.getResponseCode());
+                else System.out.println("Shuffled.");
+            });
+        } catch (RequestBuildException ignored) {
+            System.out.println("Request build failed.");
+        }
+    }
+    
+    public static void skipExample() {
+        try {
+            var request = new SkipRequest.Builder(elixir)
+                    .guild("887516061266755585").build();
+            request.execute(response -> {
+                if(response.getResponseCode() != 200)
+                    System.out.println("Skip failed.");
+                else System.out.println("Skipped.");
+            });
+        } catch (RequestBuildException ignored) {
+            System.out.println("Request build failed.");
+        }
     }
 }
