@@ -10,6 +10,8 @@ import tech.xigam.elixirapi.objects.TrackObject;
 import tech.xigam.elixirapi.responses.GenericPlayerResponse;
 import tech.xigam.elixirapi.responses.TrackResponse;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.function.Consumer;
 
@@ -28,7 +30,7 @@ public final class PlayRequest extends PlayerRequest {
     public void execute(Consumer<PlayerResponse> response) {
         var request = new Request.Builder(this.api)
                 .method(Request.Method.POST)
-                .endpoint("skip")
+                .endpoint("play")
                 .argument("guild", this.guild)
                 .argument("query", this.query)
                 .build();
@@ -46,7 +48,11 @@ public final class PlayRequest extends PlayerRequest {
          * @return The search request.
          */
         public Builder track(String query) {
-            this.query = Base64.getUrlEncoder().encodeToString(query.getBytes());
+            if(this.api.shouldUseBase64()) {
+                this.query = Base64.getUrlEncoder().encodeToString(query.getBytes());
+            } else {
+                this.query = URLEncoder.encode(query, StandardCharsets.UTF_8);
+            }
             return this;
         }
         

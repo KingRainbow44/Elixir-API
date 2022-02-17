@@ -2,10 +2,9 @@ package tech.xigam.tests;
 
 import tech.xigam.elixirapi.ElixirAPI;
 import tech.xigam.elixirapi.exceptions.RequestBuildException;
-import tech.xigam.elixirapi.requests.player.GetPlayingTrackRequest;
-import tech.xigam.elixirapi.requests.player.PauseRequest;
-import tech.xigam.elixirapi.requests.player.ResumeRequest;
-import tech.xigam.elixirapi.requests.player.SkipRequest;
+import tech.xigam.elixirapi.requests.player.*;
+import tech.xigam.elixirapi.requests.playlist.FetchPlaylistRequest;
+import tech.xigam.elixirapi.requests.playlist.QueuePlaylistRequest;
 import tech.xigam.elixirapi.requests.queue.GetQueueRequest;
 import tech.xigam.elixirapi.requests.queue.ShuffleRequest;
 
@@ -17,7 +16,43 @@ public final class Environment {
             System.exit(0);
         Environment.elixir = ElixirAPI.create(args[0]);
         
-        shuffleExample();
+        fetchPlaylistExample();
+    }
+    
+    public static void fetchPlaylistExample() {
+        try {
+            var request = new FetchPlaylistRequest.Builder(elixir)
+                    .playlist("magix").build();
+            request.execute(response -> {
+                System.out.println(response.getResponseCode());
+//                var tracks = response.getAsTrackCollection();
+//                for(var track : tracks.tracks)
+//                    System.out.println("Track: " + track.title + " by " + track.author + "\n");
+            });
+        } catch (RequestBuildException ignored) {
+            System.out.println("Request build failed.");
+        }
+    }
+    
+    public static void queuePlaylistExample() {
+        try {
+            var request = new QueuePlaylistRequest.Builder(elixir)
+                    .channel("887526479360065601").playlist("magix")
+                    .guild("887516061266755585").build();
+            request.execute(response -> System.out.println("Playlist queued."));
+        } catch (RequestBuildException ignored) {
+            System.out.println("Request build failed.");
+        }
+    }
+    
+    public static void playExample() {
+        try {
+            var request = new PlayRequest.Builder(elixir)
+                    .track("dream roadtrip").guild("887516061266755585").build();
+            request.execute(response -> System.out.println("executed"));
+        } catch (RequestBuildException ignored) {
+            System.out.println("Request build failed.");
+        }
     }
     
     public static void playingTrackExample() {

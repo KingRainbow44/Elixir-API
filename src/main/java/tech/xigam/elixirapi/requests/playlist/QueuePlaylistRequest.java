@@ -23,7 +23,7 @@ public final class QueuePlaylistRequest extends PlaylistRequest {
     public void execute(Consumer<PlaylistResponse> response) {
         var request = new Request.Builder(this.api)
                 .method(Request.Method.POST)
-                .endpoint("queue")
+                .endpoint("playlist/queue")
                 .argument("guild", this.guild)
                 .argument("channel", this.channel)
                 .argument("id", this.playlist)

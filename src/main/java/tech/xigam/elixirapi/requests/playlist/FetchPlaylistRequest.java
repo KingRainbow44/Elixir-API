@@ -7,13 +7,12 @@ import tech.xigam.elixirapi.responses.PlaylistResponse;
 import java.util.function.Consumer;
 
 public final class FetchPlaylistRequest extends PlaylistRequest {
-    private final String guild, playlist;
+    private final String playlist;
 
     public FetchPlaylistRequest(
-            ElixirAPI api, String guild, String playlist
+            ElixirAPI api, String playlist
     ) {
         super(api); // Set the Elixir API.
-        this.guild = guild; // Set the guild.
         this.playlist = playlist; // Set the playlist.
     }
 
@@ -21,8 +20,7 @@ public final class FetchPlaylistRequest extends PlaylistRequest {
     public void execute(Consumer<PlaylistResponse> response) {
         var request = new Request.Builder(this.api)
                 .method(Request.Method.GET)
-                .endpoint("queue")
-                .argument("guild", this.guild)
+                .endpoint("playlist/fetch")
                 .argument("id", this.playlist)
                 .build();
         request.execute(res -> response.accept(new PlaylistResponse(res.getResponse(), res.getResponseCode())));
@@ -35,7 +33,7 @@ public final class FetchPlaylistRequest extends PlaylistRequest {
 
         @Override
         public FetchPlaylistRequest build() {
-            return new FetchPlaylistRequest(this.api, this.guild, this.playlist);
+            return new FetchPlaylistRequest(this.api, this.playlist);
         }
     }
 }
