@@ -1,5 +1,5 @@
 # What is it?
-This is a Java wrapper for the [Elixir Music](https://ponjo.club/invites/elixir) Discord bot's HTTP API.
+This is a Java wrapper for the [Elixir Music](https://ponjo.club/invites/elixir) Discord bot's [HTTP API](https://docs.ponjo.club/ponjo-api/endpoints/ElixirEndpoint.html).
 
 # Usage
 Add Elixir-API as a dependency.
