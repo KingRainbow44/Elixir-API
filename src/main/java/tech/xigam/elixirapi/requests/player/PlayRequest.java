@@ -2,6 +2,7 @@ package tech.xigam.elixirapi.requests.player;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParser;
+import tech.xigam.elixirapi.Bot;
 import tech.xigam.elixirapi.ElixirAPI;
 import tech.xigam.elixirapi.Request;
 import tech.xigam.elixirapi.exceptions.RequestBuildException;
@@ -19,9 +20,10 @@ public final class PlayRequest extends PlayerRequest {
     private final String guild, query;
     
     public PlayRequest(
-            ElixirAPI api, String guild, String query
+            ElixirAPI api, Bot bot, String guild,
+            String query
     ) {
-        super(api); // Set the Elixir API.
+        super(api, bot); // Set the Elixir API.
         this.guild = guild; // Set the guild.
         this.query = query; // Set the query.
     }
@@ -31,6 +33,7 @@ public final class PlayRequest extends PlayerRequest {
         var request = new Request.Builder(this.api)
                 .method(Request.Method.POST)
                 .endpoint("play")
+                .argument("bot", this.bot.getBotId())
                 .argument("guild", this.guild)
                 .argument("query", this.query)
                 .build();
@@ -58,7 +61,8 @@ public final class PlayRequest extends PlayerRequest {
         
         @Override
         public PlayerRequest build() throws RequestBuildException {
-            return new PlayRequest(this.api, this.guild, this.query);
+            if(this.bot == null) this.bot = this.api.preferredBot();
+            return new PlayRequest(this.api, this.bot, this.guild, this.query);
         }
     }
     

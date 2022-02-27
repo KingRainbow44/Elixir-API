@@ -1,5 +1,6 @@
 package tech.xigam.elixirapi.requests.queue;
 
+import tech.xigam.elixirapi.Bot;
 import tech.xigam.elixirapi.ElixirAPI;
 import tech.xigam.elixirapi.Request;
 import tech.xigam.elixirapi.responses.QueueResponse;
@@ -10,9 +11,9 @@ public final class ShuffleRequest extends QueueRequest {
     private final String guild;
 
     public ShuffleRequest(
-            ElixirAPI api, String guild
+            ElixirAPI api, Bot bot, String guild
     ) {
-        super(api); // Set the Elixir API.
+        super(api, bot); // Set the Elixir API.
         this.guild = guild; // Set the guild.
     }
 
@@ -33,7 +34,8 @@ public final class ShuffleRequest extends QueueRequest {
 
         @Override
         public ShuffleRequest build() {
-            return new ShuffleRequest(this.api, this.guild);
+            if(this.bot == null) this.bot = this.api.preferredBot();
+            return new ShuffleRequest(this.api, this.bot, this.guild);
         }
     }
 }

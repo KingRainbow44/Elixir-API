@@ -1,5 +1,6 @@
 package tech.xigam.elixirapi.requests.playlist;
 
+import tech.xigam.elixirapi.Bot;
 import tech.xigam.elixirapi.ElixirAPI;
 import tech.xigam.elixirapi.Request;
 import tech.xigam.elixirapi.responses.PlaylistResponse;
@@ -10,10 +11,10 @@ public final class QueuePlaylistRequest extends PlaylistRequest {
     private final String guild, channel, playlist;
 
     public QueuePlaylistRequest(
-            ElixirAPI api, String guild, String channel,
-            String playlist
+            ElixirAPI api, Bot bot, String guild,
+            String channel, String playlist
     ) {
-        super(api); // Set the Elixir API.
+        super(api, bot); // Set the Elixir API.
         this.guild = guild; // Set the guild.
         this.channel = channel; // Set the channel.
         this.playlist = playlist; // Set the playlist.
@@ -24,6 +25,7 @@ public final class QueuePlaylistRequest extends PlaylistRequest {
         var request = new Request.Builder(this.api)
                 .method(Request.Method.POST)
                 .endpoint("playlist/queue")
+                .argument("bot", this.bot.getBotId())
                 .argument("guild", this.guild)
                 .argument("channel", this.channel)
                 .argument("id", this.playlist)
@@ -44,7 +46,8 @@ public final class QueuePlaylistRequest extends PlaylistRequest {
 
         @Override
         public QueuePlaylistRequest build() {
-            return new QueuePlaylistRequest(this.api, this.guild, this.channel, this.playlist);
+            if(this.bot == null) this.bot = this.api.preferredBot();
+            return new QueuePlaylistRequest(this.api, this.bot, this.guild, this.channel, this.playlist);
         }
     }
 }

@@ -6,11 +6,12 @@
 
     <groupId>tech.xigam</groupId>
     <artifactId>Elixir-API</artifactId>
-    <version>2.1</version>
+    <version>2.2</version>
     
     <!-- 
     Change Log:
     2.1 - Added support for URI encoding for PlayRequest; Fixed a bug with play, playlist/queue, and playlist/fetch; Added more examples.
+    2.2 - Fixed breaking change/added support for all Elixir bots.
     -->
 
     <name>Elixir-API</name>
@@ -128,6 +129,7 @@
             <id>ossrh</id>
             <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
+        
         <repository>
             <id>ossrh</id>
             <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>

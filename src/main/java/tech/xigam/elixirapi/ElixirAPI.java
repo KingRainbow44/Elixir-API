@@ -15,6 +15,7 @@ public final class ElixirAPI {
     
     private final String apiKey;
     private boolean useBase64 = false;
+    private Bot preferredBot = Bot.ELIXIR_MUSIC;
     
     private ElixirAPI(String apiKey) {
         this.apiKey = apiKey;
@@ -30,5 +31,13 @@ public final class ElixirAPI {
     
     public boolean shouldUseBase64() {
         return this.useBase64;
+    }
+    
+    public ElixirAPI setPreferredBot(Bot preferredBot) {
+        this.preferredBot = preferredBot; return this;
+    }
+    
+    public Bot preferredBot() {
+        return this.preferredBot;
     }
 }
