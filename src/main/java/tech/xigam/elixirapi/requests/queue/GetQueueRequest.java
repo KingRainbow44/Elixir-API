@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 
 public final class GetQueueRequest extends QueueRequest {
     private final String guild;
-    
+
     public GetQueueRequest(
             ElixirAPI api, Bot bot, String guild
     ) {
@@ -26,7 +26,7 @@ public final class GetQueueRequest extends QueueRequest {
                 .build();
         request.execute(res -> response.accept(new QueueResponse(res.getResponse(), res.getResponseCode())));
     }
-    
+
     public static class Builder extends QueueRequest.Builder {
         public Builder(ElixirAPI api) {
             super(api);
@@ -34,7 +34,7 @@ public final class GetQueueRequest extends QueueRequest {
 
         @Override
         public GetQueueRequest build() {
-            if(this.bot == null) this.bot = this.api.preferredBot();
+            if (this.bot == null) this.bot = this.api.preferredBot();
             return new GetQueueRequest(this.api, this.bot, this.guild);
         }
     }

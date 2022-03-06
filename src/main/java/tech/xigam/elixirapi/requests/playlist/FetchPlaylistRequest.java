@@ -35,7 +35,7 @@ public final class FetchPlaylistRequest extends PlaylistRequest {
 
         @Override
         public FetchPlaylistRequest build() {
-            if(this.bot == null) this.bot = this.api.preferredBot();
+            if (this.bot == null) this.bot = this.api.preferredBot();
             return new FetchPlaylistRequest(this.api, this.bot, this.playlist);
         }
     }

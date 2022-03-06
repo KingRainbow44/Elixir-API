@@ -10,18 +10,20 @@ import java.util.function.Consumer;
 public abstract class PlayerRequest {
     protected final ElixirAPI api;
     protected final Bot bot;
-    
+
     public PlayerRequest(ElixirAPI api, Bot bot) {
-        this.api = api; this.bot = bot;
+        this.api = api;
+        this.bot = bot;
     }
-    
+
     public abstract void execute(Consumer<PlayerResponse> response);
-    
+
     public static class Builder {
         protected final ElixirAPI api;
 
         protected String guild = "";
         protected String query = "";
+        protected String channel = "";
         protected Bot bot = null;
 
         public Builder(ElixirAPI api) {
@@ -29,11 +31,13 @@ public abstract class PlayerRequest {
         }
 
         public Builder guild(String guild) {
-            this.guild = guild; return this;
+            this.guild = guild;
+            return this;
         }
-        
+
         public Builder bot(Bot bot) {
-            this.bot = bot; return this;
+            this.bot = bot;
+            return this;
         }
 
         public PlayerRequest build() throws RequestBuildException {

@@ -13,7 +13,7 @@ import java.util.function.Consumer;
 
 public final class GetPlayingTrackRequest extends PlayerRequest {
     private final String guild;
-    
+
     public GetPlayingTrackRequest(
             ElixirAPI api, Bot bot, String guild
     ) {
@@ -38,16 +38,16 @@ public final class GetPlayingTrackRequest extends PlayerRequest {
 
         @Override
         public GetPlayingTrackRequest build() {
-            if(this.bot == null) this.bot = this.api.preferredBot();
+            if (this.bot == null) this.bot = this.api.preferredBot();
             return new GetPlayingTrackRequest(this.api, this.bot, this.guild);
         }
     }
-    
+
     public static class Response extends TrackResponse {
         public Response(String response, int responseCode) {
             super(response, responseCode);
         }
-        
+
         @Override
         public TrackObject getAsTrack() {
             var jsonObject = JsonParser.parseString(this.getResponse()).getAsJsonObject();

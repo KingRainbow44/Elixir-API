@@ -34,7 +34,7 @@ public final class ShuffleRequest extends QueueRequest {
 
         @Override
         public ShuffleRequest build() {
-            if(this.bot == null) this.bot = this.api.preferredBot();
+            if (this.bot == null) this.bot = this.api.preferredBot();
             return new ShuffleRequest(this.api, this.bot, this.guild);
         }
     }

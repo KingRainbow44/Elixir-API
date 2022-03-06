@@ -9,7 +9,7 @@ public final class TrackObject {
     public boolean isStream;
     public String uri, url;
     public long position;
-    
+
     public String getUrl() {
         return Objects.requireNonNullElse(uri, url);
     }

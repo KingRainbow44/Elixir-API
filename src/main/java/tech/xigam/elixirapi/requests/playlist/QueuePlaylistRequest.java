@@ -35,18 +35,19 @@ public final class QueuePlaylistRequest extends PlaylistRequest {
 
     public static class Builder extends PlaylistRequest.Builder {
         private String channel;
-        
+
         public Builder(ElixirAPI api) {
             super(api);
         }
-        
+
         public Builder channel(String channel) {
-            this.channel = channel; return this;
+            this.channel = channel;
+            return this;
         }
 
         @Override
         public QueuePlaylistRequest build() {
-            if(this.bot == null) this.bot = this.api.preferredBot();
+            if (this.bot == null) this.bot = this.api.preferredBot();
             return new QueuePlaylistRequest(this.api, this.bot, this.guild, this.channel, this.playlist);
         }
     }

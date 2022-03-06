@@ -12,7 +12,8 @@ public abstract class PlaylistRequest {
     protected final Bot bot;
 
     public PlaylistRequest(ElixirAPI api, Bot bot) {
-        this.api = api; this.bot = bot;
+        this.api = api;
+        this.bot = bot;
     }
 
     public abstract void execute(Consumer<PlaylistResponse> response);
@@ -29,15 +30,18 @@ public abstract class PlaylistRequest {
         }
 
         public Builder guild(String guild) {
-            this.guild = guild; return this;
+            this.guild = guild;
+            return this;
         }
-        
+
         public Builder playlist(String playlist) {
-            this.playlist = playlist; return this;
+            this.playlist = playlist;
+            return this;
         }
 
         public Builder bot(Bot bot) {
-            this.bot = bot; return this;
+            this.bot = bot;
+            return this;
         }
 
         public PlaylistRequest build() throws RequestBuildException {

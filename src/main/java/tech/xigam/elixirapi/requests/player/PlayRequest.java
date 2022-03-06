@@ -17,14 +17,15 @@ import java.util.Base64;
 import java.util.function.Consumer;
 
 public final class PlayRequest extends PlayerRequest {
-    private final String guild, query;
-    
+    private final String guild, channel, query;
+
     public PlayRequest(
             ElixirAPI api, Bot bot, String guild,
-            String query
+            String channel, String query
     ) {
         super(api, bot); // Set the Elixir API.
         this.guild = guild; // Set the guild.
+        this.channel = channel; // Set the channel.
         this.query = query; // Set the query.
     }
 
@@ -35,11 +36,12 @@ public final class PlayRequest extends PlayerRequest {
                 .endpoint("play")
                 .argument("bot", this.bot.getBotId())
                 .argument("guild", this.guild)
+                .argument("channel", this.channel)
                 .argument("query", this.query)
                 .build();
         request.execute(res -> new GenericPlayerResponse(res.getResponse(), res.getResponseCode()));
     }
-    
+
     public static class Builder extends PlayerRequest.Builder {
         public Builder(ElixirAPI api) {
             super(api);
@@ -47,25 +49,31 @@ public final class PlayRequest extends PlayerRequest {
 
         /**
          * This automatically Base64 encodes the query.
+         *
          * @param query The query to search for.
          * @return The search request.
          */
         public Builder track(String query) {
-            if(this.api.shouldUseBase64()) {
+            if (this.api.shouldUseBase64()) {
                 this.query = Base64.getUrlEncoder().encodeToString(query.getBytes());
             } else {
                 this.query = URLEncoder.encode(query, StandardCharsets.UTF_8);
             }
             return this;
         }
-        
+
+        public Builder channel(String channel) {
+            this.channel = channel;
+            return this;
+        }
+
         @Override
         public PlayerRequest build() throws RequestBuildException {
-            if(this.bot == null) this.bot = this.api.preferredBot();
-            return new PlayRequest(this.api, this.bot, this.guild, this.query);
+            if (this.bot == null) this.bot = this.api.preferredBot();
+            return new PlayRequest(this.api, this.bot, this.guild, this.channel, this.query);
         }
     }
-    
+
     public static class Response extends TrackResponse {
         public Response(String response, int responseCode) {
             super(response, responseCode);

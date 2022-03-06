@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 
 public final class PauseRequest extends PlayerRequest {
     private final String guild;
-    
+
     public PauseRequest(
             ElixirAPI api, Bot bot, String guild
     ) {
@@ -29,7 +29,7 @@ public final class PauseRequest extends PlayerRequest {
                 .build();
         request.execute(res -> new GenericPlayerResponse(res.getResponse(), res.getResponseCode()));
     }
-    
+
     public static class Builder extends PlayerRequest.Builder {
         public Builder(ElixirAPI api) {
             super(api);
@@ -37,7 +37,7 @@ public final class PauseRequest extends PlayerRequest {
 
         @Override
         public PlayerRequest build() throws RequestBuildException {
-            if(this.bot == null) this.bot = this.api.preferredBot();
+            if (this.bot == null) this.bot = this.api.preferredBot();
             return new PauseRequest(this.api, this.bot, this.guild);
         }
     }

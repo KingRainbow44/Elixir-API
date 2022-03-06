@@ -1,6 +1,5 @@
 package tech.xigam.elixirapi;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -15,34 +14,38 @@ public final class Request {
     private final String url;
     private final Method method;
     private final Map<String, String> arguments;
-    
+
     private Request(ElixirAPI api, String endpoint, Method method, Map<String, String> arguments) throws MalformedURLException {
         this.api = api;
         this.url = ElixirAPI.ENDPOINT_URL + endpoint;
         this.method = method;
         this.arguments = arguments;
     }
-    
+
     private URL buildUrl() {
         try {
             boolean firstArgument = true;
             StringBuilder builder = new StringBuilder(this.url);
-            for(var entry : this.arguments.entrySet()) {
-                if(firstArgument) {
+            for (var entry : this.arguments.entrySet()) {
+                if (firstArgument) {
                     builder.append("?");
                     firstArgument = false;
                 } else builder.append("&");
                 builder.append(entry.getKey()).append("=").append(entry.getValue());
-            } return new URL(builder.toString());
+            }
+            return new URL(builder.toString());
         } catch (MalformedURLException e) {
             e.printStackTrace();
-        } return null;
+        }
+        return null;
     }
-    
+
     public void execute(Consumer<Response> callback) {
         try {
-            var url = this.buildUrl(); if(url == null) {
-                callback.accept(null); return;
+            var url = this.buildUrl();
+            if (url == null) {
+                callback.accept(null);
+                return;
             }
             var connection = (HttpURLConnection) url.openConnection();
             connection.setRequestProperty("Content-Language", "en-US");
@@ -55,46 +58,51 @@ public final class Request {
 
             // Get response & execute callback.
             var response = new Response(connection.getInputStream(), connection.getResponseCode());
-            callback.accept(response); connection.disconnect();
+            callback.accept(response);
+            connection.disconnect();
         } catch (IOException exception) {
             callback.accept(new Response(InputStream.nullInputStream(), 404));
         }
     }
-    
+
+    public enum Method {
+        GET, POST, PUT, DELETE
+    }
+
     public static class Builder {
         private final ElixirAPI api;
-        private final Map<String, String> arguments = 
+        private final Map<String, String> arguments =
                 new HashMap<>();
-        
+
         private String endpoint;
         private Method method;
-        
+
         public Builder(ElixirAPI apiInstance) {
             this.api = apiInstance;
         }
-        
+
         public Builder endpoint(String endpoint) {
-            this.endpoint = endpoint; return this;
+            this.endpoint = endpoint;
+            return this;
         }
-        
+
         public Builder method(Method method) {
-            this.method = method; return this;
+            this.method = method;
+            return this;
         }
-        
+
         public Builder argument(String key, String value) {
-            this.arguments.put(key, value); return this;
+            this.arguments.put(key, value);
+            return this;
         }
-        
+
         public Request build() {
             try {
                 return new Request(this.api, this.endpoint, this.method, this.arguments);
             } catch (MalformedURLException e) {
                 e.printStackTrace();
-            } return null;
+            }
+            return null;
         }
-    }
-    
-    public enum Method {
-        GET, POST, PUT, DELETE
     }
 }

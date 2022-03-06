@@ -8,6 +8,6 @@ public abstract class TrackResponse extends Response implements PlayerResponse {
     public TrackResponse(String response, int responseCode) {
         super(response, responseCode);
     }
-    
+
     public abstract TrackObject getAsTrack();
 }
