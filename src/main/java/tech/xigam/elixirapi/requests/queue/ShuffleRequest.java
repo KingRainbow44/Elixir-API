@@ -22,6 +22,7 @@ public final class ShuffleRequest extends QueueRequest {
         var request = new Request.Builder(this.api)
                 .method(Request.Method.POST)
                 .endpoint("shuffle")
+                .argument("bot", this.bot.getBotId())
                 .argument("guild", this.guild)
                 .build();
         request.execute(res -> response.accept(new QueueResponse(res.getResponse(), res.getResponseCode())));

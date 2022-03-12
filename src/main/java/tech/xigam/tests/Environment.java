@@ -1,5 +1,6 @@
 package tech.xigam.tests;
 
+import tech.xigam.elixirapi.Bot;
 import tech.xigam.elixirapi.ElixirAPI;
 import tech.xigam.elixirapi.exceptions.RequestBuildException;
 import tech.xigam.elixirapi.requests.player.*;
@@ -16,7 +17,7 @@ public final class Environment {
             System.exit(0);
         Environment.elixir = ElixirAPI.create(args[0]);
         
-        fetchPlaylistExample();
+        queueExample();
     }
     
     public static void fetchPlaylistExample() {
@@ -72,7 +73,7 @@ public final class Environment {
     public static void queueExample() {
         try {
             var request = new GetQueueRequest.Builder(elixir)
-                    .guild("887516061266755585").build();
+                    .guild("887516061266755585").bot(Bot.ELIXIR_PREMIUM).build();
             request.execute(response -> response.getAsTrackCollection()
                     .tracks.forEach(track -> System.out.println("Queued: " + track.title)));
         } catch (RequestBuildException ignored) {

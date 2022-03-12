@@ -22,6 +22,7 @@ public final class GetQueueRequest extends QueueRequest {
         var request = new Request.Builder(this.api)
                 .method(Request.Method.GET)
                 .endpoint("queue")
+                .argument("bot", this.bot.getBotId())
                 .argument("guild", this.guild)
                 .build();
         request.execute(res -> response.accept(new QueueResponse(res.getResponse(), res.getResponseCode())));
